@@ -1,5 +1,5 @@
 /*
-* supersizr.js 1.0
+* supersizr.js 1.0.1
 * Sergi Meseguer @zigotica
 * https://github.com/zigotica/supersizr
 */
@@ -18,7 +18,7 @@
         fn.apply(context, args);
       }, delay || 200);
     };
-  }
+  };
 
   var methods = {
     init : function( options ) {  
@@ -37,30 +37,30 @@
         $(this).attr("id", id);
         var elm = $('#'+id);
 
-        elm.supersizr('create', id); 
+        elm.supersizr('create', id, settings); 
         elm.supersizr('sizr', id); 
 
         // $(window).on('resize.supersizr', function(){elm.supersizr('sizr', id)} );
-        $(window).on('resize.supersizr', $.debouncr( function (event) { elm.supersizr('sizr', id)  }));
+        $(window).on('resize.supersizr', $.debouncr( function (event) { elm.supersizr('sizr', id);  }));
           
       });
     }
 
     , sizr : function ( id ) {
-
-      var elm = $('#'+id);
+      var elm = $('#'+id),
+          settings = elm.data("supersizr").settings;
 
       // formula / algorithm:
-      var fs = elm.parent().width() / ( elm.outerWidth() / parseInt(elm.css("font-size")) );
+      var fs = elm.parent().width() / ( elm.outerWidth() / parseInt(elm.css("font-size"), null) );
       fs = Math.max(Math.min( fs , parseFloat(settings.maxSize)), parseFloat(settings.minSize));
 
-      var LHratio = 1
+      var LHratio = 1;
       if( settings.preserveLineHeight == 1) LHratio = elm.data("supersizr").RT;
 
       elm.css({'font-size': fs, 'line-height': (fs * LHratio) +"px" });
     }
 
-    , create : function( id ) {
+    , create : function( id, settings ) {
         var elm = $('#'+id);
         elm.data('supersizr', {
             "PW": elm.parent().width()
@@ -68,7 +68,8 @@
           , "WS": elm.css("white-space")
           , "FS": elm.css("font-size")
           , "LH": elm.css("line-height")
-          , "RT": parseInt(elm.css("line-height")) / parseInt(elm.css("font-size"))
+          , "RT": parseInt(elm.css("line-height"),null) / parseInt(elm.css("font-size"),null)
+          , "settings": settings
         });
         // we force inline-block and nowrap (needed to calculate width in one line);
         elm.css({
@@ -81,7 +82,7 @@
 
       return this.each(function(){
 
-        var id = $(this).attr("id")
+        var id = $(this).attr("id");
         var elm = $('#'+id);
         $(window).unbind('.supersizr');
         // reset styles:
@@ -93,7 +94,7 @@
         });
         elm.removeData('supersizr');
 
-      })
+      });
 
      }
   };
