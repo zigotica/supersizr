@@ -23,7 +23,15 @@ You can override default settings:
 ```
 minSize and maxSize are quite self-explainatory. 
 preserveLineHeight calculates takes line-height/font-size ratio and applies it to adjust line-height after each element has been fitted.
-
+### reload
+You can reload any instance by using:
+```
+  $(window).supersizr( "sizr" , "id_of_element");
+```
+You can reload all instances much easier, by using:
+```
+  $(window).supersizr( "resizeAll");
+```
 ## Dependencies:
 [jQuery](http://jquery.com/) (should work from v1.7 or newer; only tested on 1.8)
 
