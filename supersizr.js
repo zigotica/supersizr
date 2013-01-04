@@ -7,7 +7,9 @@
 
 ;(function( $ ){
 
-  var count = 0; 
+  var count = 0,
+      selectors = []; 
+
   // modified from http://remysharp.com/2010/07/21/throttling-function-calls/
   $.debouncr = function(fn, delay) {
     var timer = null;
@@ -46,6 +48,17 @@
       });
     }
 
+    , addSelector : function(id){
+      selectors.push(id);
+    }
+
+    , resizeAll : function(){
+      var le = selectors.length;
+      for(var i=0; i<le; i++) {
+        $(window).supersizr("sizr", selectors[i]);
+      }
+    }
+
     , sizr : function ( id ) {
       var elm = $('#'+id),
           settings = elm.data("supersizr").settings;
@@ -62,6 +75,9 @@
 
     , create : function( id, settings ) {
         var elm = $('#'+id);
+
+        elm.supersizr('addSelector', id); 
+
         elm.data('supersizr', {
             "PW": elm.parent().width()
           , "DS": elm.css("display")
@@ -100,7 +116,6 @@
   };
 
   $.fn.supersizr = function( method ) {
-    
     // Method calling logic
     if ( methods[method] ) {
       return methods[ method ].apply( this, Array.prototype.slice.call( arguments, 1 ));
